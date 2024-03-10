@@ -16,7 +16,7 @@
             "previewLimit": 50,
             "server": "localhost",
             "port": 5432,
-            "database": "postgres",
+            "database": "live_view_studio_2ed_dev",
             "username": "postgres",
             "password": "postgres"
           }
