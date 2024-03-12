@@ -42,7 +42,7 @@
   "forwardPorts": [4000, 4001, 5432],
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "createdb -U postgres -h localhost live_view_studio_2ed_dev || exit 0 && mix setup",
+  "postCreateCommand": "createdb -U postgres -h localhost live_view_studio_2ed_dev || exit 0 && mix setup && mix phx.server",
 
   // Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
   "remoteUser": "vscode"
