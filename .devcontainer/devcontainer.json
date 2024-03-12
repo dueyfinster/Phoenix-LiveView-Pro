@@ -2,9 +2,15 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.209.6/containers/elixir-phoenix-postgres
 {
   "name": "Phoenix-LiveView-Pro",
-  "dockerComposeFile": "docker-compose.yml",
-  "service": "elixir",
-  "workspaceFolder": "/workspace",
+  "image": "mcr.microsoft.com/devcontainers/base:bullseye",
+	"features": {
+		"ghcr.io/devcontainers/features/node:1": {},
+		"ghcr.io/devcontainers-contrib/features/elixir-asdf:2": {
+      "elixirVersion": "1.16.1-otp-26",
+      "erlangVersion": "26.2.2"
+    },
+		"ghcr.io/itsmechlark/features/postgresql:1": {}
+	},
 
   "customizations": {
     "vscode": {
@@ -36,7 +42,7 @@
   "forwardPorts": [4000, 4001, 5432],
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "mix setup",
+  "postCreateCommand": "createdb -U postgres -h localhost live_view_studio_2ed_dev || exit 0 && mix setup",
 
   // Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
   "remoteUser": "vscode"
