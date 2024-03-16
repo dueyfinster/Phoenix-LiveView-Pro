@@ -3,15 +3,14 @@
 {
   "name": "Phoenix-LiveView-Pro",
   "image": "mcr.microsoft.com/devcontainers/base:bullseye",
-	"features": {
-		"ghcr.io/devcontainers/features/node:1": {},
-		"ghcr.io/devcontainers-contrib/features/elixir-asdf:2": {
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers-contrib/features/elixir-asdf:2": {
       "elixirVersion": "1.16.1-otp-26",
       "erlangVersion": "26.2.2"
     },
-		"ghcr.io/itsmechlark/features/postgresql:1": {}
-	},
-
+    "ghcr.io/itsmechlark/features/postgresql:1": {}
+  },
   "customizations": {
     "vscode": {
       "settings": {
@@ -26,24 +25,41 @@
             "username": "postgres",
             "password": "postgres"
           }
-        ]
+        ],
+        "elixirLS.suggestSpecs": false,
+        "elixirLS.dialyzerEnabled": true,
+        "elixirLS.signatureAfterComplete": false,
+        "elixirLS.fetchDeps": false,
+        "files.associations": {
+          "*.heex": "phoenix-heex"
+        },
+        "[elixir]": {
+          "editor.formatOnSave": true,
+          "editor.defaultFormatter": "JakeBecker.elixir-ls"
+        },
+        "[phoenix-heex]": {
+          "editor.formatOnSave": true,
+          "editor.defaultFormatter": "JakeBecker.elixir-ls"
+        },
       },
       "extensions": [
         "jakebecker.elixir-ls",
         "mtxr.sqltools",
         "mtxr.sqltools-driver-pg",
         "phoenixframework.phoenix",
-        "dprint.dprint"
+        "dprint.dprint",
+        "vortizhe.simple-ruby-erb"
       ]
     }
   },
-
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  "forwardPorts": [4000, 4001, 5432],
-
+  "forwardPorts": [
+    4000,
+    4001,
+    5432
+  ],
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": "createdb -U postgres -h localhost live_view_studio_2ed_dev || exit 0 && mix setup && mix phx.server",
-
   // Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
   "remoteUser": "vscode"
 }
