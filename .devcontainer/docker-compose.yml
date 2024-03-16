@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  phoenix:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    volumes:
+      - ..:/workspace:cached
+    network_mode: service:db
+  db:
+    image: postgres:13.1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: live_view_studio_2ed_dev
+      PGDATA: /var/lib/postgresql/data/pgdata
+    restart: always
+    volumes:
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db:
