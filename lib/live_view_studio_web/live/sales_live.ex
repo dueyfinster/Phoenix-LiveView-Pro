@@ -4,12 +4,11 @@ defmodule LiveViewStudioWeb.SalesLive do
   alias LiveViewStudio.Sales
 
   def mount(_params, _session, socket) do
-    socket =
-      assign(socket,
-        new_orders: Sales.new_orders(),
-        sales_amount: Sales.sales_amount(),
-        satisfaction: Sales.satisfaction()
-      )
+    if connected?(socket) do
+      :timer.send_interval(1000, self(), :tick)
+    end
+
+    socket = assign_stats(socket)
 
     {:ok, socket}
   end
@@ -45,10 +44,30 @@ defmodule LiveViewStudioWeb.SalesLive do
         </div>
       </div>
 
-      <button>
+      <button phx-click="refresh">
         <img src="/images/refresh.svg" /> Refresh
       </button>
     </div>
     """
+  end
+
+  def handle_event(
+        "refresh",
+        _,
+        socket
+      ) do
+    {:noreply, assign_stats(socket)}
+  end
+
+  def handle_info(:tick, socket) do
+    {:noreply, assign_stats(socket)}
+  end
+
+  defp assign_stats(socket) do
+    assign(socket,
+      new_orders: Sales.new_orders(),
+      sales_amount: Sales.sales_amount(),
+      satisfaction: Sales.satisfaction()
+    )
   end
 end
