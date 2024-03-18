@@ -6,6 +6,8 @@ defmodule LiveViewStudioWeb.VehiclesLive do
     socket =
       assign(socket,
         vehicles: [],
+        query: "",
+        matches: %{},
         loading: false
       )
 
@@ -16,21 +18,31 @@ defmodule LiveViewStudioWeb.VehiclesLive do
     ~H"""
     <h1>🚙 Find a Vehicle 🚘</h1>
     <div id="vehicles">
-      <form phx-submit="search">
+      <form phx-submit="search" phx-change="suggest">
         <input
           type="text"
           name="query"
-          value=""
+          value={@query}
           placeholder="Make or model"
           autofocus
           autocomplete="off"
           readonly={@loading}
+          list="matches"
+          phx-debounce="1000"
         />
 
         <button>
           <img src="/images/search.svg" />
         </button>
       </form>
+
+      <datalist id="matches">
+        <%= for match <- @matches do %>
+          <option value={match}>
+            <%= match %>
+          </option>
+        <% end %>
+      </datalist>
 
       <div :if={@loading} class="loading">Loading...</div>
 
@@ -53,12 +65,22 @@ defmodule LiveViewStudioWeb.VehiclesLive do
     """
   end
 
-  def handle_event("search", %{"query" => make_or_model}, socket) do
-    send(self(), {:run_search, make_or_model})
+  def handle_event("suggest", %{"query" => make_model}, socket) do
+    matches = Vehicles.suggest(make_model)
+    IO.inspect(matches, label: "MATCH")
+
+    {:noreply,
+     assign(socket,
+       matches: matches
+     )}
+  end
+
+  def handle_event("search", %{"query" => query}, socket) do
+    send(self(), {:run_search, query})
 
     socket =
       assign(socket,
-        query: make_or_model,
+        query: query,
         vehicles: [],
         loading: true
       )
@@ -66,10 +88,10 @@ defmodule LiveViewStudioWeb.VehiclesLive do
     {:noreply, socket}
   end
 
-  def handle_info({:run_search, make_or_model}, socket) do
+  def handle_info({:run_search, query}, socket) do
     socket =
       assign(socket,
-        vehicles: Vehicles.search(make_or_model),
+        vehicles: Vehicles.search(query),
         loading: false
       )
 
