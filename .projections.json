@@ -1,0 +1,28 @@
+{
+  "lib/*.ex": {
+    "alternate": "test/{}_test.exs",
+    "type": "source",
+    "template": [
+      "defmodule {camelcase|capitalize|dot} do",
+      "end"
+    ]
+  },
+  "test/*_test.exs": {
+    "alternate": "lib/{}.ex",
+    "type": "test",
+    "template": [
+      "defmodule {camelcase|capitalize|dot}Test do",
+      "  use Exi.DataCase",
+      "",
+      "  alias {camelcase|capitalize|dot}",
+      "end"
+    ]
+  },
+  "lib/live_view_studio_web/live/*_live.ex": {
+    "alternate": "lib/live_view_studio_web/live/{}_live.html.heex",
+    "type": "live"
+  },
+  "lib/*_live.html.heex": {
+    "alternate": "lib/{}_live.ex"
+  }
+}
